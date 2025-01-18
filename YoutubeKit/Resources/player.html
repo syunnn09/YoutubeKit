@@ -13,35 +13,42 @@
         var player;
         var time;
         YT.ready(function() {
-                 player = new YT.Player('player', %@);
-                 webkit.messageHandlers.onYouTubeIframeAPIReady.postMessage('');
-                 function updateTime() {
-                     var state = player.getPlayerState();
-                     if (state == YT.PlayerState.PLAYING) {
-                        time = player.getCurrentTime();
-                        webkit.messageHandlers.onUpdateCurrentTime.postMessage(time);
-                     }
+             player = new YT.Player('player', %@);
+             webkit.messageHandlers.onYouTubeIframeAPIReady.postMessage('');
+             function updateTime() {
+                 var state = player.getPlayerState();
+                 if (state == YT.PlayerState.PLAYING) {
+                     time = player.getCurrentTime();
+                     webkit.messageHandlers.onUpdateCurrentTime.postMessage(time);
                  }
-                 window.setInterval(updateTime, 500);
-                 });
-                 function onReady(event) {
-                     webkit.messageHandlers.onReady.postMessage('');
-                 }
-    function onStateChange(event) {
-        webkit.messageHandlers.onStateChange.postMessage(event.data);
-    }
-    function onPlaybackQualityChange(event) {
-        webkit.messageHandlers.onPlaybackQualityChange.postMessage(event.data);
-    }
-    function onPlaybackRateChange(event) {
-        webkit.messageHandlers.onPlaybackRateChange.postMessage(event.data);
-    }
-    function onError(event) {
-        webkit.messageHandlers.onError.postMessage(event.data);
-    }
-    function onApiChange(event) {
-        webkit.messageHandlers.onApiChange.postMessage(event.data);
-    }
+             }
+             window.setInterval(updateTime, 500);
+        });
+
+        function onReady(event) {
+            webkit.messageHandlers.onReady.postMessage('');
+            webkit.messageHandlers.onGetVideoData.postMessage(player.getVideoData());
+            // webkit.messageHandlers.printService.postMessage("--- document ---");
+            // webkit.messageHandlers.printService.postMessage(document);
+            // const player = document.getElementById('player');
+            // webkit.messageHandlers.printService.postMessage("--- player.innerHTML ---");
+            // webkit.messageHandlers.printService.postMessage(player.innerHTML);
+        }
+        function onStateChange(event) {
+            webkit.messageHandlers.onStateChange.postMessage(event.data);
+        }
+        function onPlaybackQualityChange(event) {
+            webkit.messageHandlers.onPlaybackQualityChange.postMessage(event.data);
+        }
+        function onPlaybackRateChange(event) {
+            webkit.messageHandlers.onPlaybackRateChange.postMessage(event.data);
+        }
+        function onError(event) {
+            webkit.messageHandlers.onError.postMessage(event.data);
+        }
+        function onApiChange(event) {
+            webkit.messageHandlers.onApiChange.postMessage(event.data);
+        }
     </script>
 </body>
 </html>

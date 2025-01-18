@@ -75,6 +75,14 @@ public protocol YTSwiftyPlayerDelegate: AnyObject {
         - player: The current active player instance.
      */
     func youtubeIframeAPIFailedToLoad(_ player: YTSwiftyPlayer)
+
+    /**
+      get video title from Youtube IFrame API.
+     
+     - parameters:
+        - title: The current video title.
+     */
+    func videoDataFetched(_ title: String)
 }
 
 // Default implementation of delegate methods, These delegate functions are option.
@@ -156,4 +164,12 @@ public extension YTSwiftyPlayerDelegate {
      *     - player: The player instance that has faile to load API .
      */
     func youtubeIframeAPIFailedToLoad(_ player: YTSwiftyPlayer) {}
+
+    /**
+     get video title from Youtube IFrame API.
+     
+     - parameters:
+     - title: The current video title.
+     */
+    func videoDataFetched(_ title: String) {}
 }

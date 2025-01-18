@@ -58,7 +58,9 @@ open class YTSwiftyPlayer: WKWebView {
         .onPlaybackRateChange,
         .onApiChange,
         .onError,
-        .onUpdateCurrentTime
+        .onUpdateCurrentTime,
+        .onGetVideoData,
+        .printService
     ]
 
     static private var defaultConfiguration: WKWebViewConfiguration {
@@ -130,7 +132,7 @@ open class YTSwiftyPlayer: WKWebView {
             "height": "100%" as AnyObject,
             "events": events as AnyObject,
             "playerVars": playerVars as AnyObject,
-            ]
+        ]
 
         if let videoID = playerVars["videoId"] {
             parameters["videoId"] = videoID
@@ -312,6 +314,7 @@ extension YTSwiftyPlayer: WKScriptMessageHandler {
 
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let event = YTSwiftyPlayerEvent(rawValue: message.name) else { return }
+//        print(#function, event)
         switch event {
         case .onReady:
             delegate?.playerReady(self)
@@ -353,6 +356,13 @@ extension YTSwiftyPlayer: WKScriptMessageHandler {
             delegate?.youtubeIframeAPIReady(self)
         case .onYouTubeIframeAPIFailedToLoad:
             delegate?.youtubeIframeAPIFailedToLoad(self)
+        case .onGetVideoData:
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []) else { return }
+            guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+            guard let decodeData = try? JSONDecoder().decode(VideoDataModel.self, from: jsonData) else { return }
+            delegate?.videoDataFetched(decodeData.title)
+        case .printService:
+            print("message: ", message.body)
         }
     }
 
